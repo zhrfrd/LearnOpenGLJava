@@ -1,5 +1,5 @@
 /**
- * Refactore the code in order to use a Shader class
+ * Refactor the code in order to use a Shader class
  * https://learnopengl.com/Getting-started/Shaders
  */
 
@@ -42,13 +42,15 @@ public class Main {
 
         // Make the OpenGL context current and set framebuffer resize callback
         glfwMakeContextCurrent(window);
-        glfwSetFramebufferSizeCallback(window, (win, width, height) -> glViewport(0, 0, width, height));
+        glfwSetFramebufferSizeCallback(window, (win, width, height) ->
+                glViewport(0, 0, width, height)
+        );
 
         // Load OpenGL functions using GL.createCapabilities
         GL.createCapabilities();
 
         // Build and compile the shader program
-        Shader ourShader = new Shader("/shaders/shader.vert", "/shaders/shader.frag");
+        Shader ourShader = new Shader("/resources/shaders/3.3.shader.vert", "/resources/shaders/3.3.shader.frag");
 
         // Set up vertex data and buffers
         float[] vertices = {

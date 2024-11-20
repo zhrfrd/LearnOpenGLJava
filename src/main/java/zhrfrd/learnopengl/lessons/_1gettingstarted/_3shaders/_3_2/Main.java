@@ -46,7 +46,7 @@ public class Main {
         glfwFreeCallbacks(window);
         glfwDestroyWindow(window);
         glfwTerminate();
-        glfwSetErrorCallback(null).free();
+//        glfwSetErrorCallback(null).free();
     }
 
     private void init() {
