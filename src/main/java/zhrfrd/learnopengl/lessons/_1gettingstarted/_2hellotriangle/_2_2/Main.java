@@ -1,4 +1,9 @@
-package zhrfrd.learnopengl.lessons.hellotriangle.exercises;
+/**
+ * Make a rectangle
+ * https://learnopengl.com/Getting-started/Hello-Triangle
+ */
+
+package zhrfrd.learnopengl.lessons._1gettingstarted._2hellotriangle._2_2;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
@@ -6,8 +11,7 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL33;
 import org.lwjgl.system.MemoryUtil;
 
-public class Exercise3 {
-
+public class Main {
     // Settings
     private static final int SCR_WIDTH = 800;
     private static final int SCR_HEIGHT = 600;
@@ -21,20 +25,12 @@ public class Exercise3 {
                     "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n" +   // assign vertex shader output to gl_Position
                     "}";
 
-    private static final String fragmentShaderSource1 =
+    private static final String fragmentShaderSource =
             "#version 330 core\n" +
                     "out vec4 FragColor;\n" +   // Fragment shader only requires one output variable.
                     "void main()\n" +
                     "{\n" +
                     "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n" +
-                    "}";
-
-    private static final String fragmentShaderSource2 =
-            "#version 330 core\n" +
-                    "out vec4 FragColor;\n" +   // Fragment shader only requires one output variable.
-                    "void main()\n" +
-                    "{\n" +
-                    "   FragColor = vec4(0.0f, 0.5f, 0.2f, 1.0f);\n" +
                     "}";
 
     public static void main(String[] args) {
@@ -72,60 +68,46 @@ public class Exercise3 {
         GL33.glCompileShader(vertexShader);   // Compile the shader
         checkCompileErrors(vertexShader, "VERTEX");   // Check if the compilation of the shader succeded.
 
-        int fragmentShader1 = GL33.glCreateShader(GL33.GL_FRAGMENT_SHADER);   // Fragment shader is responsible for the colouring of the scene.
-        GL33.glShaderSource(fragmentShader1, fragmentShaderSource1);
-        GL33.glCompileShader(fragmentShader1);
-        checkCompileErrors(fragmentShader1, "FRAGMENT1");
-
-        int fragmentShader2 = GL33.glCreateShader(GL33.GL_FRAGMENT_SHADER);   // Fragment shader is responsible for the colouring of the scene.
-        GL33.glShaderSource(fragmentShader2, fragmentShaderSource2);
-        GL33.glCompileShader(fragmentShader2);
-        checkCompileErrors(fragmentShader2, "FRAGMENT2");
+        int fragmentShader = GL33.glCreateShader(GL33.GL_FRAGMENT_SHADER);   // Fragment shader is responsible for the colouring of the scene.
+        GL33.glShaderSource(fragmentShader, fragmentShaderSource);
+        GL33.glCompileShader(fragmentShader);
+        checkCompileErrors(fragmentShader, "FRAGMENT");
 
         // LINK THE SHADER OBJECTS TO THE SHADER PROGRAM
         // To use the recently compiled shaders we have to link them to a shader program object and then activate this shader program when rendering objects. The activated shader program's shaders will be used when we issue render calls.
         // When linking the shaders into a program it links the outputs of each shader to the inputs of the next shader.
-        int shaderProgram1 = GL33.glCreateProgram();   // Create program object. Return 0 if there is an error creating the program.
-        GL33.glAttachShader(shaderProgram1, vertexShader);   // Attach the compiled shader objects to the program object.
-        GL33.glAttachShader(shaderProgram1, fragmentShader1); //
-        GL33.glLinkProgram(shaderProgram1);   // Links all the attached compiled shaders  to the program object
-        checkLinkErrors(shaderProgram1);   // Check if linking the shaders to the program caused an error.
-        int shaderProgram2 = GL33.glCreateProgram();   // Create program object. Return 0 if there is an error creating the program.
-        GL33.glAttachShader(shaderProgram2, vertexShader);   // Attach the compiled shader objects to the program object.
-        GL33.glAttachShader(shaderProgram2, fragmentShader2); //
-        GL33.glLinkProgram(shaderProgram2);   // Links all the attached compiled shaders  to the program object
-        checkLinkErrors(shaderProgram2);   // Check if linking the shaders to the program caused an error.
-
+        int shaderProgram = GL33.glCreateProgram();   // Create program object. Return 0 if there is an error creating the program.
+        GL33.glAttachShader(shaderProgram, vertexShader);   // Attach the compiled shader objects to the program object.
+        GL33.glAttachShader(shaderProgram, fragmentShader); //
+        GL33.glLinkProgram(shaderProgram);   // Links all the attached compiled shaders  to the program object
+        checkLinkErrors(shaderProgram);   // Check if linking the shaders to the program caused an error.
         GL33.glDeleteShader(vertexShader);   // De-allocate resources.
-        GL33.glDeleteShader(fragmentShader1); //
-        GL33.glDeleteShader(fragmentShader2); //
+        GL33.glDeleteShader(fragmentShader); //
 
         // LINKING VERTEX ATTRIBUTES
         // Tell OpenGL how it should interpret the vertex data in memory and how it should connect the vertex data to the vertex shader's attributes.
 
         // Set up vertex data and configure vertex attributes
-        // First triangle
-        float[] vertices1 = {
-                -1f, -0.5f, 0.0f,
-                0f, -0.5f, 0.0f,
-                -0.5f,  0.5f, 0.0f,
+        float vertices[] = {
+                0.5f,  0.5f, 0.0f,  // top right
+                0.5f, -0.5f, 0.0f,  // bottom right
+                -0.5f, -0.5f, 0.0f,  // bottom left
+                -0.5f,  0.5f, 0.0f   // top left
         };
-        // Second triangle
-        float[] vertices2 = {
-                -0f, -0.5f, 0.0f,
-                1f, -0.5f, 0.0f,
-                0.5f,  0.5f, 0.0f,
+        int indices[] = {  // note that we start from 0!
+                0, 1, 3,   // first triangle
+                1, 2, 3    // second triangle
         };
 
-        int VAO1 = GL33.glGenVertexArrays();   // glGenVertexArrays Generate a vertex array object
-        int VBO1 = GL33.glGenBuffers();   // glGenBuffers Generates a buffer object.
-        int VAO2 = GL33.glGenVertexArrays();   // glGenVertexArrays Generate a vertex array object
-        int VBO2 = GL33.glGenBuffers();   // glGenBuffers Generates a buffer object.
+        int VAO = GL33.glGenVertexArrays();   // glGenVertexArrays Generate a vertex array object
+        int VBO = GL33.glGenBuffers();   // glGenBuffers Generates a buffer object. Vertex Buffer Object
+        int EBO = GL33.glGenBuffers();   // Element Buffer Object
 
-        // First Triangle
-        GL33.glBindVertexArray(VAO1);
-        GL33.glBindBuffer(GL33.GL_ARRAY_BUFFER, VBO1);   // Bind the buffer object created (VBO) to the specified buffer type (GL_ARRAY_BUFFER). From that point on any buffer calls we make (on the GL_ARRAY_BUFFER target) will be used to configure the currently bound buffer, which is VBO.
-        GL33.glBufferData(GL33.GL_ARRAY_BUFFER, vertices1, GL33.GL_STATIC_DRAW);   // Copy the previously defined vertex data into the buffers memory.
+        GL33.glBindVertexArray(VAO);
+        GL33.glBindBuffer(GL33.GL_ARRAY_BUFFER, VBO);   // Bind the buffer object created (VBO) to the specified buffer type (GL_ARRAY_BUFFER). From that point on any buffer calls we make (on the GL_ARRAY_BUFFER target) will be used to configure the currently bound buffer, which is VBO.
+        GL33.glBufferData(GL33.GL_ARRAY_BUFFER, vertices, GL33.GL_STATIC_DRAW);   // Copy the previously defined vertex data into the buffers memory.
+        GL33.glBindBuffer(GL33.GL_ELEMENT_ARRAY_BUFFER, EBO);   // Bind the buffer object created (EBO) to the specified buffer type (GL_ARRAY_BUFFER).
+        GL33.glBufferData(GL33.GL_ELEMENT_ARRAY_BUFFER, indices, GL33.GL_STATIC_DRAW);   // Copy the previously defined vertex data into the buffers memory.
 
         GL33.glVertexAttribPointer(0, 3, GL33.GL_FLOAT, false, 3 * Float.BYTES, 0);   // Vertex attribute configuration.
         GL33.glEnableVertexAttribArray(0);   // Enable the vertex attribute
@@ -133,16 +115,8 @@ public class Exercise3 {
         GL33.glBindBuffer(GL33.GL_ARRAY_BUFFER, 0);
         GL33.glBindVertexArray(0);
 
-        // Second triangle
-        GL33.glBindVertexArray(VAO2);
-        GL33.glBindBuffer(GL33.GL_ARRAY_BUFFER, VBO2);   // Bind the buffer object created (VBO) to the specified buffer type (GL_ARRAY_BUFFER). From that point on any buffer calls we make (on the GL_ARRAY_BUFFER target) will be used to configure the currently bound buffer, which is VBO.
-        GL33.glBufferData(GL33.GL_ARRAY_BUFFER, vertices2, GL33.GL_STATIC_DRAW);   // Copy the previously defined vertex data into the buffers memory.
+//       GL33.glPolygonMode(GL33.GL_FRONT_AND_BACK, GL33.GL_LINE);   // Wireframe mode
 
-        GL33.glVertexAttribPointer(0, 3, GL33.GL_FLOAT, false, 3 * Float.BYTES, 0);   // Vertex attribute configuration.
-        GL33.glEnableVertexAttribArray(0);   // Enable the vertex attribute
-
-        GL33.glBindBuffer(GL33.GL_ARRAY_BUFFER, 0);
-        GL33.glBindVertexArray(0);
         // Render loop
         while (!GLFW.glfwWindowShouldClose(window)) {
             processInput(window);
@@ -151,24 +125,19 @@ public class Exercise3 {
             GL33.glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             GL33.glClear(GL33.GL_COLOR_BUFFER_BIT);
 
-            GL33.glUseProgram(shaderProgram1);   // Activate the shader program for subsequent drawing commands.
-            GL33.glBindVertexArray(VAO1);
-            GL33.glDrawArrays(GL33.GL_TRIANGLES, 0, 3);
-            GL33.glUseProgram(shaderProgram2);   // Activate the shader program for subsequent drawing commands.
-            GL33.glBindVertexArray(VAO2);
-            GL33.glDrawArrays(GL33.GL_TRIANGLES, 0, 3);
+            GL33.glUseProgram(shaderProgram);   // Activate the shader program for subsequent drawing commands.
+            GL33.glBindVertexArray(VAO);
+            GL33.glDrawElements(GL33.GL_TRIANGLES, 6, GL33.GL_UNSIGNED_INT, 0);
 
             GLFW.glfwSwapBuffers(window);
             GLFW.glfwPollEvents();
         }
 
         // De-allocate resources
-        GL33.glDeleteVertexArrays(VAO1);
-        GL33.glDeleteBuffers(VBO1);
-        GL33.glDeleteVertexArrays(VAO2);
-        GL33.glDeleteBuffers(VBO2);
-        GL33.glDeleteProgram(shaderProgram1);
-        GL33.glDeleteProgram(shaderProgram2);
+        GL33.glDeleteVertexArrays(VAO);
+        GL33.glDeleteBuffers(VBO);
+        GL33.glDeleteBuffers(EBO);
+        GL33.glDeleteProgram(shaderProgram);
 
         GLFW.glfwTerminate();
     }

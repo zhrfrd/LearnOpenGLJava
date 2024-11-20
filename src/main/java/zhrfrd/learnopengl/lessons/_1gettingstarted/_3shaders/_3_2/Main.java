@@ -1,4 +1,9 @@
-package zhrfrd.learnopengl.lessons.shaders;
+/**
+ * Use shaders to add different colours to each vertices
+ * https://learnopengl.com/Getting-started/Shaders
+ */
+
+package zhrfrd.learnopengl.lessons._1gettingstarted._3shaders._3_2;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
@@ -8,8 +13,7 @@ import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL33.*;
 
-public class Shaders2 {
-
+public class Main {
     private static final int SCR_WIDTH = 800;
     private static final int SCR_HEIGHT = 600;
 
@@ -151,6 +155,6 @@ public class Shaders2 {
     }
 
     public static void main(String[] args) {
-        new Shaders2().run();
+        new Main().run();
     }
 }

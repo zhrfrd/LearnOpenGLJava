@@ -1,4 +1,9 @@
-package zhrfrd.learnopengl.lessons.hellotriangle.exercises;
+/**
+ * Make a triangle
+ * https://learnopengl.com/Getting-started/Hello-Triangle
+ */
+
+package zhrfrd.learnopengl.lessons._1gettingstarted._2hellotriangle._2_1;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
@@ -6,7 +11,7 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL33;
 import org.lwjgl.system.MemoryUtil;
 
-public class Exercise2 {
+public class Main {
 
     // Settings
     private static final int SCR_WIDTH = 800;
@@ -84,28 +89,18 @@ public class Exercise2 {
         // Tell OpenGL how it should interpret the vertex data in memory and how it should connect the vertex data to the vertex shader's attributes.
 
         // Set up vertex data and configure vertex attributes
-        // First triangle
-        float[] vertices1 = {
-                -1f, -0.5f, 0.0f,
-                0f, -0.5f, 0.0f,
-                -0.5f,  0.5f, 0.0f,
-        };
-        // Second triangle
-        float[] vertices2 = {
-                -0f, -0.5f, 0.0f,
-                1f, -0.5f, 0.0f,
-                0.5f,  0.5f, 0.0f,
+        float[] vertices = {
+                -0.5f, -0.5f, 0.0f,
+                0.5f, -0.5f, 0.0f,
+                0.0f,  0.5f, 0.0f,
         };
 
-        int VAO1 = GL33.glGenVertexArrays();   // glGenVertexArrays Generate a vertex array object
-        int VBO1 = GL33.glGenBuffers();   // glGenBuffers Generates a buffer object.
-        int VAO2 = GL33.glGenVertexArrays();   // glGenVertexArrays Generate a vertex array object
-        int VBO2 = GL33.glGenBuffers();   // glGenBuffers Generates a buffer object.
+        int VAO = GL33.glGenVertexArrays();   // glGenVertexArrays Generate a vertex array object
+        int VBO = GL33.glGenBuffers();   // glGenBuffers Generates a buffer object.
 
-        // First Triangle
-        GL33.glBindVertexArray(VAO1);
-        GL33.glBindBuffer(GL33.GL_ARRAY_BUFFER, VBO1);   // Bind the buffer object created (VBO) to the specified buffer type (GL_ARRAY_BUFFER). From that point on any buffer calls we make (on the GL_ARRAY_BUFFER target) will be used to configure the currently bound buffer, which is VBO.
-        GL33.glBufferData(GL33.GL_ARRAY_BUFFER, vertices1, GL33.GL_STATIC_DRAW);   // Copy the previously defined vertex data into the buffers memory.
+        GL33.glBindVertexArray(VAO);
+        GL33.glBindBuffer(GL33.GL_ARRAY_BUFFER, VBO);   // Bind the buffer object created (VBO) to the specified buffer type (GL_ARRAY_BUFFER). From that point on any buffer calls we make (on the GL_ARRAY_BUFFER target) will be used to configure the currently bound buffer, which is VBO.
+        GL33.glBufferData(GL33.GL_ARRAY_BUFFER, vertices, GL33.GL_STATIC_DRAW);   // Copy the previously defined vertex data into the buffers memory.
 
         GL33.glVertexAttribPointer(0, 3, GL33.GL_FLOAT, false, 3 * Float.BYTES, 0);   // Vertex attribute configuration.
         GL33.glEnableVertexAttribArray(0);   // Enable the vertex attribute
@@ -113,16 +108,6 @@ public class Exercise2 {
         GL33.glBindBuffer(GL33.GL_ARRAY_BUFFER, 0);
         GL33.glBindVertexArray(0);
 
-        // Second triangle
-        GL33.glBindVertexArray(VAO2);
-        GL33.glBindBuffer(GL33.GL_ARRAY_BUFFER, VBO2);   // Bind the buffer object created (VBO) to the specified buffer type (GL_ARRAY_BUFFER). From that point on any buffer calls we make (on the GL_ARRAY_BUFFER target) will be used to configure the currently bound buffer, which is VBO.
-        GL33.glBufferData(GL33.GL_ARRAY_BUFFER, vertices2, GL33.GL_STATIC_DRAW);   // Copy the previously defined vertex data into the buffers memory.
-
-        GL33.glVertexAttribPointer(0, 3, GL33.GL_FLOAT, false, 3 * Float.BYTES, 0);   // Vertex attribute configuration.
-        GL33.glEnableVertexAttribArray(0);   // Enable the vertex attribute
-
-        GL33.glBindBuffer(GL33.GL_ARRAY_BUFFER, 0);
-        GL33.glBindVertexArray(0);
         // Render loop
         while (!GLFW.glfwWindowShouldClose(window)) {
             processInput(window);
@@ -132,9 +117,7 @@ public class Exercise2 {
             GL33.glClear(GL33.GL_COLOR_BUFFER_BIT);
 
             GL33.glUseProgram(shaderProgram);   // Activate the shader program for subsequent drawing commands.
-            GL33.glBindVertexArray(VAO1);
-            GL33.glDrawArrays(GL33.GL_TRIANGLES, 0, 3);
-            GL33.glBindVertexArray(VAO2);
+            GL33.glBindVertexArray(VAO);
             GL33.glDrawArrays(GL33.GL_TRIANGLES, 0, 3);
 
             GLFW.glfwSwapBuffers(window);
@@ -142,10 +125,8 @@ public class Exercise2 {
         }
 
         // De-allocate resources
-        GL33.glDeleteVertexArrays(VAO1);
-        GL33.glDeleteBuffers(VBO1);
-        GL33.glDeleteVertexArrays(VAO2);
-        GL33.glDeleteBuffers(VBO2);
+        GL33.glDeleteVertexArrays(VAO);
+        GL33.glDeleteBuffers(VBO);
         GL33.glDeleteProgram(shaderProgram);
 
         GLFW.glfwTerminate();

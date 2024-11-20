@@ -1,4 +1,9 @@
-package zhrfrd.learnopengl.lessons.shaders.exercises;
+/**
+ * Refactore the code in order to use a Shader class
+ * https://learnopengl.com/Getting-started/Shaders
+ */
+
+package zhrfrd.learnopengl.lessons._1gettingstarted._3shaders._3_3;
 
 import org.lwjgl.opengl.*;
 
@@ -6,7 +11,7 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL33.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-public class Exercise1 {
+public class Main {
     // Settings
     private static final int SCR_WIDTH = 800;
     private static final int SCR_HEIGHT = 600;
@@ -48,9 +53,9 @@ public class Exercise1 {
         // Set up vertex data and buffers
         float[] vertices = {
                 // positions         // colors
-                -0.5f, 0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  // bottom right
-                0.5f, 0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  // bottom left
-                0.0f,  -0.5f, 0.0f,  0.0f, 0.0f, 1.0f   // top
+                0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  // bottom right
+                -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  // bottom left
+                0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f   // top
         };
 
         int VAO = glGenVertexArrays();

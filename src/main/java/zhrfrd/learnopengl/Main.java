@@ -1,128 +1,173 @@
 package zhrfrd.learnopengl;
 
+import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
-import zhrfrd.learnopengl.lessons.shaders.Shaders2;
+import org.lwjgl.system.*;
+import zhrfrd.learnopengl.lessons._1gettingstarted._3shaders._3_3.Shader;
 
+import java.nio.*;
+
+import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL33.*;
-import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.stb.STBImage.*;
+import static org.lwjgl.system.MemoryStack.*;
+import static org.lwjgl.system.MemoryUtil.*;
 
 public class Main {
-    // Settings
-    private static final int SCR_WIDTH = 800;
-    private static final int SCR_HEIGHT = 600;
+
+    // Window dimensions
+    private static final int WIDTH = 800;
+    private static final int HEIGHT = 600;
+
     private long window;
 
     public static void main(String[] args) {
         new Main().run();
     }
 
-    private void run() {
+    public void run() {
         init();
-        render();
+        loop();
 
-        // Terminate GLFW
+        // Free resources and close window
+        glfwFreeCallbacks(window);
+        glfwDestroyWindow(window);
         glfwTerminate();
+        glfwSetErrorCallback(null).free();
     }
 
     private void init() {
         // Initialize GLFW
+        GLFWErrorCallback.createPrint(System.err).set();
         if (!glfwInit()) {
-            throw new IllegalStateException("Failed to initialize GLFW");
+            throw new IllegalStateException("Unable to initialize GLFW");
         }
 
         // Configure GLFW
+        glfwDefaultWindowHints();
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-        // MacOS compatibility
-        if (System.getProperty("os.name").toLowerCase().contains("mac")) {
-            glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-        }
-
-        // Create GLFW window
-        window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+        // Create the window
+        window = glfwCreateWindow(WIDTH, HEIGHT, "LWJGL Texture Example", NULL, NULL);
         if (window == NULL) {
-            System.err.println("Failed to create GLFW window");
-            glfwTerminate();
-            return;
+            throw new RuntimeException("Failed to create the GLFW window");
         }
 
-        // Make the OpenGL context current and set framebuffer resize callback
-        glfwMakeContextCurrent(window);
-        glfwSetFramebufferSizeCallback(window, (win, width, height) -> glViewport(0, 0, width, height));
+        // Set the resize callback
+        glfwSetFramebufferSizeCallback(window, (window, width, height) -> {
+            glViewport(0, 0, width, height);
+        });
 
-        // Load OpenGL functions using GL.createCapabilities
+        // Make the OpenGL context current
+        glfwMakeContextCurrent(window);
+        glfwSwapInterval(1);
+
+        // Make the window visible
+        glfwShowWindow(window);
+
+        // Load OpenGL functions
         GL.createCapabilities();
     }
 
-    private void render() {
-        // Build and compile the shader program
-        Shader shader = new Shader("/shaders/shader.vert", "/shaders/shader.frag");
+    private void loop() {
+        Shader shader = new Shader("/resources/shaders/4.1.texture.vert", "/resources/shaders/4.1.texture.frag");
 
-        // Set up vertex data and buffers
+        // Set up vertex data
         float[] vertices = {
-                // positions         // colors
-                0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,  // bottom right
-                -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,  // bottom left
-                0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f   // top
+                // positions         // colors         // texture coordinates
+                0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  1.0f, 1.0f, // top right
+                0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  1.0f, 0.0f, // bottom right
+                -0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f,  0.0f, 0.0f, // bottom left
+                -0.5f,  0.5f, 0.0f,  1.0f, 1.0f, 0.0f,  0.0f, 1.0f  // top left
+        };
+        int[] indices = {
+                0, 1, 3, // first triangle
+                1, 2, 3  // second triangle
         };
 
-        int VAO = glGenVertexArrays();
-        int VBO = glGenBuffers();
+        int vao = glGenVertexArrays();
+        int vbo = glGenBuffers();
+        int ebo = glGenBuffers();
 
-        // Bind and configure VAO and VBO
-        glBindVertexArray(VAO);
+        glBindVertexArray(vao);
 
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
 
-        // Position attribute
-        glVertexAttribPointer(0, 3, GL_FLOAT, false, 6 * Float.BYTES, 0);
-        glEnableVertexAttribArray(0);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW);
 
+        // Position attribute
+        glVertexAttribPointer(0, 3, GL_FLOAT, false, 8 * Float.BYTES, 0);
+        glEnableVertexAttribArray(0);
         // Color attribute
-        glVertexAttribPointer(1, 3, GL_FLOAT, false, 6 * Float.BYTES, 3 * Float.BYTES);
+        glVertexAttribPointer(1, 3, GL_FLOAT, false, 8 * Float.BYTES, 3 * Float.BYTES);
         glEnableVertexAttribArray(1);
+        // Texture coordinate attribute
+        glVertexAttribPointer(2, 2, GL_FLOAT, false, 8 * Float.BYTES, 6 * Float.BYTES);
+        glEnableVertexAttribArray(2);
+
+        // Load and create a texture
+        int texture = glGenTextures();
+        glBindTexture(GL_TEXTURE_2D, texture);
+
+        // Set texture parameters
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        // Load image
+        loadImage();
 
         // Render loop
         while (!glfwWindowShouldClose(window)) {
-            // Input handling
-            processInput(window);
+            processInput();
 
-            // Rendering
+            // Clear screen
             glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT);
 
-//            float offset = 0.5f;
-//            shader.setFloat("xOffset", offset);
-
-            double timeValue = glfwGetTime();
-            float greenValue = (float) (Math.sin(timeValue) / 2.0f + 0.5f);
-
-            int vertexColorLocation = glGetUniformLocation(shader.getId(), "currentColor");   // Retrieve the uniform location of a given shader program and uniform name.
-            glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);   // Set a uniform value of the current active shader program
-
-            // Render the triangle
+            // Render texture
             shader.use();
-            glBindVertexArray(VAO);
-            glDrawArrays(GL_TRIANGLES, 0, 3);
+            glBindTexture(GL_TEXTURE_2D, texture);
+            glBindVertexArray(vao);
+            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-            // Swap buffers and poll events
             glfwSwapBuffers(window);
             glfwPollEvents();
         }
 
-        // Cleanup resources
-        glDeleteVertexArrays(VAO);
-        glDeleteBuffers(VBO);
+        // Clean up
+        glDeleteVertexArrays(vao);
+        glDeleteBuffers(vbo);
+        glDeleteBuffers(ebo);
     }
 
-    // Process all input
-    private static void processInput(long window) {
+    private void processInput() {
         if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
             glfwSetWindowShouldClose(window, true);
+        }
+    }
+
+    private void loadImage() {
+        try (MemoryStack stack = stackPush()) {
+            IntBuffer width = stack.mallocInt(1);
+            IntBuffer height = stack.mallocInt(1);
+            IntBuffer channels = stack.mallocInt(1);
+
+            stbi_set_flip_vertically_on_load(true);
+            ByteBuffer data = stbi_load("resources/textures/container.jpg", width, height, channels, 0);
+            if (data != null) {
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width.get(0), height.get(0), 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+                glGenerateMipmap(GL_TEXTURE_2D);
+            } else {
+                System.err.println("Failed to load texture");
+            }
+            stbi_image_free(data);
         }
     }
 }

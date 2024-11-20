@@ -1,4 +1,9 @@
-package zhrfrd.learnopengl.lessons.shaders;
+/**
+ * Use shaders to gradually change the triangle colour
+ * https://learnopengl.com/Getting-started/Shaders
+ */
+
+package zhrfrd.learnopengl.lessons._1gettingstarted._3shaders._3_1;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
@@ -8,8 +13,7 @@ import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL33.*;
 
-public class Shaders1 {
-
+public class Main {
     private static final int SCR_WIDTH = 800;
     private static final int SCR_HEIGHT = 600;
 
@@ -144,6 +148,6 @@ public class Shaders1 {
     }
 
     public static void main(String[] args) {
-        new Shaders1().run();
+        new Main().run();
     }
 }

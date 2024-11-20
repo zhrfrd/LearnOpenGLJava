@@ -1,15 +1,16 @@
 /**
+ * Make a window
  * https://learnopengl.com/Getting-started/Hello-Window
  */
 
-package zhrfrd.learnopengl.lessons.hellotriangle;
+package zhrfrd.learnopengl.lessons._1gettingstarted._1hellowindow;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 
-public class A1HelloWindow {
+public class Main {
 
     private static final int SCR_WIDTH = 800;
     private static final int SCR_HEIGHT = 600;
