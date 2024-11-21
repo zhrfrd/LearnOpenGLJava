@@ -1,9 +1,9 @@
-package zhrfrd.learnopengljava;
+package zhrfrd.learnopengl;
 
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
-import zhrfrd.learnopengljava.lessons._1gettingstarted._3shaders._3_3.Shader;
+import zhrfrd.learnopengl.lessons._1gettingstarted._3shaders._3_3.Shader;
 
 import java.nio.*;
 
@@ -159,14 +159,14 @@ public class Main {
             IntBuffer channels = stack.mallocInt(1);
 
             stbi_set_flip_vertically_on_load(true);
-            ByteBuffer data = stbi_load("resources/textures/container.jpg", width, height, channels, 0);
-            if (data != null) {
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width.get(0), height.get(0), 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+            ByteBuffer imageData = stbi_load("resources/textures/container.jpg", width, height, channels, 0);
+            if (imageData != null) {
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width.get(0), height.get(0), 0, GL_RGB, GL_UNSIGNED_BYTE, imageData);
                 glGenerateMipmap(GL_TEXTURE_2D);
+                stbi_image_free(imageData);
             } else {
                 System.err.println("Failed to load texture");
             }
-            stbi_image_free(data);
         }
     }
 }

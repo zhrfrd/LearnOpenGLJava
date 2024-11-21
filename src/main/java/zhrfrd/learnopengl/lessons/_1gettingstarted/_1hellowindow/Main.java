@@ -3,7 +3,7 @@
  * https://learnopengl.com/Getting-started/Hello-Window
  */
 
-package zhrfrd.learnopengljava.lessons._1gettingstarted._1hellowindow;
+package zhrfrd.learnopengl.lessons._1gettingstarted._1hellowindow;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;

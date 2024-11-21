@@ -3,7 +3,7 @@
  * https://learnopengl.com/Getting-started/Hello-Triangle
  */
 
-package zhrfrd.learnopengljava.lessons._1gettingstarted._2hellotriangle._2_1;
+package zhrfrd.learnopengl.lessons._1gettingstarted._2hellotriangle._2_1;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
