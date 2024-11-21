@@ -15,7 +15,6 @@ import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 public class Main {
-
     // Window dimensions
     private static final int WIDTH = 800;
     private static final int HEIGHT = 600;
