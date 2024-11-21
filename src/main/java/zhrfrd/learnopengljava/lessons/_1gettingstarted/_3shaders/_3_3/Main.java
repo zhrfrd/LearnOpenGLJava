@@ -3,7 +3,7 @@
  * https://learnopengl.com/Getting-started/Shaders
  */
 
-package zhrfrd.learnopengl.lessons._1gettingstarted._3shaders._3_3;
+package zhrfrd.learnopengljava.lessons._1gettingstarted._3shaders._3_3;
 
 import org.lwjgl.opengl.*;
 

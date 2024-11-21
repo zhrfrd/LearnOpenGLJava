@@ -1,4 +1,4 @@
-package zhrfrd.learnopengl;
+package zhrfrd.learnopengljava;
 
 import org.lwjgl.opengl.GL33;
 import java.nio.file.Files;

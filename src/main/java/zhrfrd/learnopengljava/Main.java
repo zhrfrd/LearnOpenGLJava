@@ -1,9 +1,9 @@
-package zhrfrd.learnopengl;
+package zhrfrd.learnopengljava;
 
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
-import zhrfrd.learnopengl.lessons._1gettingstarted._3shaders._3_3.Shader;
+import zhrfrd.learnopengljava.lessons._1gettingstarted._3shaders._3_3.Shader;
 
 import java.nio.*;
 
