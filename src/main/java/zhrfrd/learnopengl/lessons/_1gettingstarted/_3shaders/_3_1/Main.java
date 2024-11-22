@@ -1,5 +1,5 @@
 /**
- * Use shaders to gradually change the triangle colour
+ * Use shaders to change the triangle colour
  * https://learnopengl.com/Getting-started/Shaders
  */
 
@@ -8,10 +8,10 @@ package zhrfrd.learnopengl.lessons._1gettingstarted._3shaders._3_1;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
-import static org.lwjgl.system.MemoryUtil.NULL;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL33.*;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Main {
     private static final int SCR_WIDTH = 800;
@@ -20,21 +20,27 @@ public class Main {
     private static final String vertexShaderSource =
             "#version 330 core\n" +
                     "layout (location = 0) in vec3 aPos;\n" +
+                    "out vec4 vertexColor;\n" +
                     "void main()\n" +
                     "{\n" +
                     "   gl_Position = vec4(aPos, 1.0);\n" +
+                    "   vertexColor = vec4(0.5, 0.0, 0.0, 1.0);\n" +
                     "}\n";
 
     private static final String fragmentShaderSource =
             "#version 330 core\n" +
                     "out vec4 FragColor;\n" +
-                    "uniform vec4 ourColor;\n" +
+                    "in vec4 vertexColor;\n" +
                     "void main()\n" +
                     "{\n" +
-                    "   FragColor = ourColor;\n" +
+                    "   FragColor = vertexColor;\n" +
                     "}\n";
 
     private long window;
+
+    public static void main(String[] args) {
+        new Main().run();
+    }
 
     public void run() {
         init();
@@ -111,10 +117,6 @@ public class Main {
             glClear(GL_COLOR_BUFFER_BIT);
 
             glUseProgram(shaderProgram);
-            double timeValue = glfwGetTime();   // Get running time in seconds.
-            float greenValue = (float) (Math.sin(timeValue) / 2.0f + 0.5f);
-            int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");   // Retrieve the uniform location of a given shader program and uniform name.
-            glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);   // Set a uniform value of the current active shader program
 
             glBindVertexArray(VAO);
             glDrawArrays(GL_TRIANGLES, 0, 3);
@@ -144,9 +146,5 @@ public class Main {
         if (glGetProgrami(program, GL_LINK_STATUS) == GL_FALSE) {
             System.out.println("ERROR::SHADER::PROGRAM::LINKING_FAILED\n" + glGetProgramInfoLog(program));
         }
-    }
-
-    public static void main(String[] args) {
-        new Main().run();
     }
 }

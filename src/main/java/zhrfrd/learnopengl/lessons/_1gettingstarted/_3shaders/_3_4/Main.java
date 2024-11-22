@@ -1,9 +1,9 @@
 /**
- * Use shaders to add different colours to each vertices
+ * Use shaders to gradually change the triangle colour
  * https://learnopengl.com/Getting-started/Shaders
  */
 
-package zhrfrd.learnopengl.lessons._1gettingstarted._3shaders._3_2;
+package zhrfrd.learnopengl.lessons._1gettingstarted._3shaders._3_4;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
@@ -19,22 +19,19 @@ public class Main {
 
     private static final String vertexShaderSource =
             "#version 330 core\n" +
-                    "layout (location = 0) in vec3 aPos;\n" +   // Position variable has attribute position 0
-                    "layout (location = 1) in vec3 aColor;\n" + // Color variable has attribute position 1
-                    "out vec3 ourColor;\n" + // Output a color to the fragment shader
+                    "layout (location = 0) in vec3 aPos;\n" +
                     "void main()\n" +
                     "{\n" +
                     "   gl_Position = vec4(aPos, 1.0);\n" +
-                    "   ourColor = aColor;\n" +
                     "}\n";
 
     private static final String fragmentShaderSource =
             "#version 330 core\n" +
                     "out vec4 FragColor;\n" +
-                    "in vec3 ourColor;\n" +
+                    "uniform vec4 ourColor;\n" +
                     "void main()\n" +
                     "{\n" +
-                    "   FragColor = vec4(ourColor, 1.0f);\n" +
+                    "   FragColor = ourColor;\n" +
                     "}\n";
 
     private long window;
@@ -50,7 +47,6 @@ public class Main {
         glfwFreeCallbacks(window);
         glfwDestroyWindow(window);
         glfwTerminate();
-//        glfwSetErrorCallback(null).free();
     }
 
     private void init() {
@@ -97,11 +93,10 @@ public class Main {
         glDeleteShader(vertexShader);
         glDeleteShader(fragmentShader);
 
-        float vertices[] = {
-                // positions         // colors
-                0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,   // bottom right
-                -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,   // bottom left
-                0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f    // top
+        float[] vertices = {
+                0.5f, -0.5f, 0.0f,
+                -0.5f, -0.5f, 0.0f,
+                0.0f,  0.5f, 0.0f
         };
 
         int VAO = glGenVertexArrays();
@@ -111,15 +106,8 @@ public class Main {
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
         glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
 
-        // Position attribute
-        glVertexAttribPointer(0, 3, GL_FLOAT, false, 6 * Float.BYTES, 0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, false, 3 * Float.BYTES, 0);
         glEnableVertexAttribArray(0);
-
-        // Color attribute
-        glVertexAttribPointer(1, 3, GL_FLOAT, false, 6 * Float.BYTES, 3 * Float.BYTES);
-        glEnableVertexAttribArray(1);
-
-        glUseProgram(shaderProgram);
 
         while (!glfwWindowShouldClose(window)) {
             processInput(window);
@@ -127,6 +115,10 @@ public class Main {
             glClear(GL_COLOR_BUFFER_BIT);
 
             glUseProgram(shaderProgram);
+            double timeValue = glfwGetTime();   // Get running time in seconds.
+            float greenValue = (float) (Math.sin(timeValue) / 2.0f + 0.5f);
+            int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");   // Retrieve the uniform location of a given shader program and uniform name.
+            glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);   // Set a uniform value of the current active shader program
 
             glBindVertexArray(VAO);
             glDrawArrays(GL_TRIANGLES, 0, 3);
