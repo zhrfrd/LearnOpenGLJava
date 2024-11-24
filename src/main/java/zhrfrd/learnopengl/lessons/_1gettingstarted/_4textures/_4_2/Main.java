@@ -1,18 +1,19 @@
-package zhrfrd.learnopengl;
+package zhrfrd.learnopengl.lessons._1gettingstarted._4textures._4_2;
 
-import org.lwjgl.glfw.*;
-import org.lwjgl.opengl.*;
-import org.lwjgl.system.*;
+import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.opengl.GL;
+import org.lwjgl.system.MemoryStack;
 import zhrfrd.learnopengl.lessons._1gettingstarted._3shaders._3_4.Shader;
 
-import java.nio.*;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
-import static org.lwjgl.glfw.Callbacks.*;
+import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL33.*;
 import static org.lwjgl.stb.STBImage.*;
-import static org.lwjgl.system.MemoryStack.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import static org.lwjgl.system.MemoryStack.stackPush;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Main {
     // Window dimensions
@@ -111,7 +112,7 @@ public class Main {
         // TEXTURE 1
         // Load and create a texture
         int texture1 = glGenTextures();
-        glActiveTexture(GL_TEXTURE0);   // activate the texture unit first before binding texture. Texture unit GL_TEXTURE0 is always by default activated, so we didn't have to activate any texture units in the previous example when using glBindTexture.
+//        glActiveTexture(GL_TEXTURE0);   // activate the texture unit first before binding texture. Texture unit GL_TEXTURE0 is always by default activated, so we didn't have to activate any texture units in the previous example when using glBindTexture.
         glBindTexture(GL_TEXTURE_2D, texture1);
 
         // Set texture parameters
@@ -121,11 +122,11 @@ public class Main {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         // Load image
-        loadImage("resources/textures/container.jpg", GL_RGB);
+        loadImage1();
 
         // TEXTURE 2
         int texture2 = glGenTextures();
-        glActiveTexture(GL_TEXTURE1);   // activate the texture unit first before binding texture. Texture unit GL_TEXTURE0 is always by default activated, so we didn't have to activate any texture units in the previous example when using glBindTexture.
+//        glActiveTexture(GL_TEXTURE1);   // activate the texture unit first before binding texture. Texture unit GL_TEXTURE0 is always by default activated, so we didn't have to activate any texture units in the previous example when using glBindTexture.
         glBindTexture(GL_TEXTURE_2D, texture2);
 
         // Set texture parameters
@@ -135,7 +136,7 @@ public class Main {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         // Load image
-        loadImage("resources/textures/awesomeface.png", GL_RGBA);
+        loadImage2();
 
         shader.use();
         glUniform1i(glGetUniformLocation(shader.getId(), "texture1"), 0);
@@ -175,16 +176,34 @@ public class Main {
         }
     }
 
-    private void loadImage(String path, int format) {
+    private void loadImage1() {
         try (MemoryStack stack = stackPush()) {
             IntBuffer width = stack.mallocInt(1);
             IntBuffer height = stack.mallocInt(1);
             IntBuffer channels = stack.mallocInt(1);
 
             stbi_set_flip_vertically_on_load(true);
-            ByteBuffer imageData = stbi_load(path, width, height, channels, 0);
+            ByteBuffer imageData = stbi_load("resources/textures/container.jpg", width, height, channels, 0);
             if (imageData != null) {
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width.get(0), height.get(0), 0, format, GL_UNSIGNED_BYTE, imageData);
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width.get(0), height.get(0), 0, GL_RGB, GL_UNSIGNED_BYTE, imageData);
+                glGenerateMipmap(GL_TEXTURE_2D);
+                stbi_image_free(imageData);
+            } else {
+                System.err.println("Failed to load texture");
+            }
+        }
+    }
+
+    private void loadImage2() {
+        try (MemoryStack stack = stackPush()) {
+            IntBuffer width = stack.mallocInt(1);
+            IntBuffer height = stack.mallocInt(1);
+            IntBuffer channels = stack.mallocInt(1);
+
+            stbi_set_flip_vertically_on_load(true);
+            ByteBuffer imageData = stbi_load("resources/textures/awesomeface.png", width, height, channels, 0);
+            if (imageData != null) {
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width.get(0), height.get(0), 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
                 glGenerateMipmap(GL_TEXTURE_2D);
                 stbi_image_free(imageData);
             } else {

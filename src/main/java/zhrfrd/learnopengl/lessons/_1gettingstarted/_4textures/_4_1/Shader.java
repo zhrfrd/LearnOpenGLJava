@@ -1,6 +1,7 @@
-package zhrfrd.learnopengl.lessons._1gettingstarted._3shaders._3_3;
+package zhrfrd.learnopengl.lessons._1gettingstarted._4textures._4_1;
 
 import org.lwjgl.opengl.GL33;
+
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
