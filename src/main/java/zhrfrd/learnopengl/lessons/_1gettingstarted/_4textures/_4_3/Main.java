@@ -1,19 +1,24 @@
-package zhrfrd.learnopengl;
+/**
+ * Last exercise: change texture visibility with up/down keys
+ * https://learnopengl.com/Getting-started/Textures
+ */
 
-import org.lwjgl.glfw.*;
-import org.lwjgl.opengl.*;
-import org.lwjgl.system.*;
+package zhrfrd.learnopengl.lessons._1gettingstarted._4textures._4_3;
+
+import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.opengl.GL;
+import org.lwjgl.system.MemoryStack;
 import zhrfrd.learnopengl.lessons._1gettingstarted._3shaders._3_4.Shader;
 
-import java.nio.*;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
-import static org.lwjgl.glfw.Callbacks.*;
+import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL20.glUniform4f;
 import static org.lwjgl.opengl.GL33.*;
 import static org.lwjgl.stb.STBImage.*;
-import static org.lwjgl.system.MemoryStack.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import static org.lwjgl.system.MemoryStack.stackPush;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Main {
     // Window dimensions

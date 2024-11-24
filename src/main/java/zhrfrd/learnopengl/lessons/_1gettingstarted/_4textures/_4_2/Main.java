@@ -1,3 +1,8 @@
+/**
+ * Overlap two textures on top of each other.
+ * https://learnopengl.com/Getting-started/Textures
+ */
+
 package zhrfrd.learnopengl.lessons._1gettingstarted._4textures._4_2;
 
 import org.lwjgl.glfw.GLFWErrorCallback;

@@ -1,3 +1,8 @@
+/**
+ * Create a simple texture with an image and change its colors.
+ * https://learnopengl.com/Getting-started/Textures
+ */
+
 package zhrfrd.learnopengl.lessons._1gettingstarted._4textures._4_1;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
