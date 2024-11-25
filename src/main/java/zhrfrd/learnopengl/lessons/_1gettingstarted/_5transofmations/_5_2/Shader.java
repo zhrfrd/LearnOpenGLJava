@@ -1,4 +1,4 @@
-package zhrfrd.learnopengl;
+package zhrfrd.learnopengl.lessons._1gettingstarted._5transofmations._5_2;
 
 import org.lwjgl.opengl.GL33;
 

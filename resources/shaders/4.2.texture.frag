@@ -10,5 +10,5 @@ uniform sampler2D texture2;
 
 void main()
 {
-    fragColor = mix(texture(texture1, texCoord), texture(texture2, texCoord));   // mix function takes two values as input and linearly interpolates between them based on its third argument. If the third value is 0.0 it returns the first input; if it's 1.0 it returns the second input value. A value of 0.2 will return 80% of the first input color and 20% of the second input color, resulting in a mixture of both our textures.
+    fragColor = mix(texture(texture1, texCoord), texture(texture2, texCoord), 0.2);   // mix function takes two values as input and linearly interpolates between them based on its third argument. If the third value is 0.0 it returns the first input; if it's 1.0 it returns the second input value. A value of 0.2 will return 80% of the first input color and 20% of the second input color, resulting in a mixture of both our textures.
 }

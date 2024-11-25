@@ -1,4 +1,4 @@
-package zhrfrd.learnopengl;
+package zhrfrd.learnopengl.lessons._1gettingstarted._5transofmations._5_1;
 
 import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -154,8 +154,9 @@ public class Main {
 
             // TRANSFORMATION
             Matrix4f transform = new Matrix4f();
-            transform.translate(0.5f, -0.5f, 0.0f);
-            transform.rotate((float) glfwGetTime(), 0.0f, 0.0f, 1.0f);
+//            transform.translate(0.5f, -0.5f, 0.0f);
+            transform.rotate((float) Math.toRadians(90.0f), 0.0f, 0.0f, 1.0f);
+
 
             int transformLoc = glGetUniformLocation(shader.getId(), "transform");
 
